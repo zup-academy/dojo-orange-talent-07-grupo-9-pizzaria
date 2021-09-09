@@ -1,14 +1,21 @@
 package br.com.zup.edu.pizzaria.pizzas.cadastropizza;
 
 import br.com.zup.edu.pizzaria.ingredientes.Ingrediente;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -18,9 +25,18 @@ class NovaPizzaControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    void deveCadastrarUmaNovaPizza(){
-        Ingrediente ingrediente = new Ingrediente("Sei la", 2, new BigDecimal("2.0"));
-        NovaPizzaRequest body = new NovaPizzaRequest("Peperone", List.of(1L, 2L));
+    @Test
+    void deveCadastrarUmaNovaPizza() throws Exception {
+        Ingrediente ingrediente = new Ingrediente("Teste", 2, new BigDecimal("2.0"));
+        Ingrediente ingrediente2 = new Ingrediente("Teste2", 2, new BigDecimal("2.0"));
+        NovaPizzaRequest body = new NovaPizzaRequest("Peperone", List.of(ingrediente.getId(), ingrediente2.getId()));
+
+        MockHttpServletRequestBuilder request = post("/api/pizzas")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(body));
+
+        mvc.perform(request)
+                .andExpect(status().isCreated());
     }
 
 }

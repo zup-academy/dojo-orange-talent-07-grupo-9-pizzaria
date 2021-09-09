@@ -20,7 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 class NovoIngredienteControllerTest {
 
-
     @Autowired
     private MockMvc mvc;
 
