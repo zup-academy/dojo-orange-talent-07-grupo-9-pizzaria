@@ -6,6 +6,7 @@ import br.com.zup.edu.pizzaria.shared.validators.UniqueValue;
 import br.com.zup.edu.pizzaria.shared.validators.UniqueValueValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dom4j.Entity;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -45,7 +46,7 @@ class UniqueValueValidatorTest {
     }
 
     @Test
-    void isValid() {
+    void deveRetornarFalsoParaValorDuplicado() {
         NovoIngredienteRequest ingrediente1 = new NovoIngredienteRequest("Queijo muçarela", new BigDecimal("2.0"), 200);
         Ingrediente ingrediente = ingrediente1.paraIngrediente();
         manager.persist(ingrediente);
@@ -53,7 +54,23 @@ class UniqueValueValidatorTest {
         UniqueValueTest uniqueValueTest = new UniqueValueTest();
 
         uniqueValueValidator.initialize(uniqueValueTest);
-        uniqueValueValidator.isValid("Queijo muçarela", constraintValidatorContext);
+        boolean valid = uniqueValueValidator.isValid("Queijo muçarela", constraintValidatorContext);
+
+        Assertions.assertFalse(valid);
+    }
+
+
+    @Test
+    void deveRetornarTrueParaValorUnico() {
+        NovoIngredienteRequest ingrediente1 = new NovoIngredienteRequest("Queijo muçarela", new BigDecimal("2.0"), 200);
+        manager.persist(ingrediente1.paraIngrediente());
+
+        UniqueValueTest uniqueValueTest = new UniqueValueTest();
+
+        uniqueValueValidator.initialize(uniqueValueTest);
+        boolean valid = uniqueValueValidator.isValid("Calabresa", constraintValidatorContext);
+
+        Assertions.assertTrue(valid);
     }
 }
 
