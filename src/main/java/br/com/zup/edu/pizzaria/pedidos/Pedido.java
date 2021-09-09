@@ -1,7 +1,5 @@
 package br.com.zup.edu.pizzaria.pedidos;
 
-import br.com.zup.edu.pizzaria.pizzas.Pizza;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,7 +18,7 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido")
     private List<Item> itens = new ArrayList<>();
 
-    private BigDecimal total;
+    private BigDecimal total = BigDecimal.ZERO;
 
     /**
      * @deprecated para uso do hibernate apenas
