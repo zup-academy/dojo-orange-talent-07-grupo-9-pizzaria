@@ -40,10 +40,12 @@ public class Pizza {
 
     private void calcularPreco() {
         this.preco = PRECO_MASSA;
-        this.preco.add(PRECO_MAO_DE_OBRA);
+        this.preco = this.preco.add(PRECO_MAO_DE_OBRA);
         this.ingredientes.stream()
                 .map(Ingrediente::getPreco)
-                .forEach(preco::add);
+                .forEach(precoIngrediente -> this.preco = this.preco.add(precoIngrediente));
+
+
     }
 
     public Long getId() {
