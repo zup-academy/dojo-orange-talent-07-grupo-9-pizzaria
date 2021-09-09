@@ -40,11 +40,28 @@ class NovoIngredienteControllerTest {
     }
 
     @Test
-    void deveDarErroAoCadastrar() throws Exception {
+    void deveDarErroAoCadastrarIngredienteComNomeVazio() throws Exception {
         NovoIngredienteRequest body = new NovoIngredienteRequest("", new BigDecimal("2.0"), -200);
         MockHttpServletRequestBuilder request = post("/api/ingredientes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(body));
+
+        mvc.perform(request)
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void deveDarErroAoCadastrarIngredienteComNomeIgual() throws Exception {
+        NovoIngredienteRequest ingrediente1 = new NovoIngredienteRequest("Queijo muçarela", new BigDecimal("2.0"), 200);
+        NovoIngredienteRequest ingrediente2 = new NovoIngredienteRequest("Queijo muçarela", new BigDecimal("2.0"), 200);
+
+        MockHttpServletRequestBuilder request = post("/api/ingredientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(ingrediente1));
+
+        MockHttpServletRequestBuilder request2 = post("/api/ingredientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(ingrediente2));
 
         mvc.perform(request)
                 .andExpect(status().isBadRequest());
